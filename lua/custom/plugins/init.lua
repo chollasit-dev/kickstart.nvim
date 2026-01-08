@@ -50,8 +50,9 @@ local linters_by_ft = {
   sql = { 'sqruff' },
   zsh = { 'shellcheck' },
 }
+local optional_linters = { 'cspell' }
 
-local ensure_installed_extends = {}
+local ensure_installed_extends = vim.list_slice(optional_linters)
 for _, val in pairs(vim.tbl_extend('force', formatters, linters_by_ft)) do
   for _, v in ipairs(val) do
     local exist = false
@@ -400,9 +401,8 @@ return {
 
       -- Create autocommand which carries out the actual linting
       -- on the specified events.
-      local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
-        group = lint_augroup,
+        group = vim.api.nvim_create_augroup('lint', { clear = true }),
         callback = function()
           -- Only run the linter in buffers that you can modify in order to
           -- avoid superfluous noise, notably within the handy LSP pop-ups that
@@ -410,8 +410,30 @@ return {
           if vim.bo.modifiable then
             lint.try_lint()
           end
+
+          if vim.b.cspell_enabled == true then
+            lint.try_lint 'cspell'
+          end
         end,
       })
+
+      vim.api.nvim_create_user_command('Cspell', function(args)
+        local options = {
+          enable = { 'Cspell enable', true },
+          disable = { 'Cspell disable', false },
+        }
+        local opt = options[args.args] or {}
+        if #opt == 0 then
+          vim.print('Unsupport command: ' .. args.args)
+          return
+        end
+
+        if vim.b.cspell_enabled == nil then
+          vim.b.cspell_enabled = true
+        end
+        vim.b.cspell_enabled = opt[2]
+        vim.print(opt[1])
+      end, { desc = 'Toggle Cspell', nargs = 1 })
     end,
   },
 }
