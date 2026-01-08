@@ -80,6 +80,44 @@ vim.opt.listchars = { extends = '+', nbsp = '␣', space = '·', tab = '» ' }
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+local map_buffer = function(keys, func, desc, mode)
+  mode = mode or { 'n', 'v' }
+  vim.keymap.set(mode, keys, func, { desc = '[B]uffer: ' .. desc })
+end
+
+local del_current_bufs = function(callback)
+  local current_buf = vim.api.nvim_get_current_buf()
+  local bufs = vim.api.nvim_list_bufs()
+  for _, idx in ipairs(bufs) do
+    if idx == current_buf then
+      vim.api.nvim_set_current_buf(bufs[#bufs])
+      callback(current_buf)
+      break
+    end
+  end
+end
+
+map_buffer('<leader>bd', function()
+  del_current_bufs(function(current_buf)
+    vim.api.nvim_buf_delete(current_buf, { force = false, unload = false })
+  end)
+end, '[d]elete [c]urrent')
+
+map_buffer('<leader>bD', function()
+  del_current_bufs(function(current_buf)
+    vim.api.nvim_buf_delete(current_buf, { force = true, unload = false })
+  end)
+end, '[D]elete [c]urrent force')
+
+map_buffer('<leader>bo', function()
+  local current = vim.api.nvim_get_current_buf()
+  for _, idx in ipairs(vim.api.nvim_list_bufs()) do
+    if idx ~= current then
+      vim.api.nvim_buf_delete(idx, { force = false, unload = false })
+    end
+  end
+end, '[D]elete [o]thers')
+
 vim.keymap.set('n', '<leader>e', '<cmd>mks!<CR><cmd>qa<CR>', { desc = '[E]xit all and save session' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -209,6 +247,8 @@ require('lazy').setup({
       spec = {
         { '<leader>s', group = '[s]earch' },
         { '<leader>t', group = '[t]oggle' },
+        -- TODO: Try add descriptions to sub groups/steps
+        { '<leader>b', group = '[b]uffer', mode = { 'n', 'v' } },
         { '<leader>G', group = '[g]itsigns', mode = { 'n', 'v' } },
         { '<leader>h', group = 'Git [h]unk', mode = { 'n', 'v' } },
       },
