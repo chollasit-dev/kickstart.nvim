@@ -251,6 +251,8 @@ require('lazy').setup({
         { '<leader>b', group = '[b]uffer', mode = { 'n', 'v' } },
         { '<leader>G', group = '[g]itsigns', mode = { 'n', 'v' } },
         { '<leader>h', group = 'Git [h]unk', mode = { 'n', 'v' } },
+        { '<leader>o', group = '[O]pencode', mode = { 'n', 'v' } },
+        { '<leader>y', group = '[Y]azi', mode = { 'n', 'v' } },
       },
     },
   },
@@ -378,11 +380,15 @@ require('lazy').setup({
   performance = {
     rtp = {
       disabled_plugins = {
+        'netrw',
+        'netrwFileHandlers',
+        'netrwPlugin',
+        'netrwSettings',
         '2html_plugin',
-        'tohtml',
-        'spellfile_plugin',
-        'tutor',
         'bugreport',
+        'spellfile_plugin',
+        'tohtml',
+        'tutor',
       },
     },
   },
