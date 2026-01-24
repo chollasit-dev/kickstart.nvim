@@ -41,6 +41,12 @@ end, '[D]elete [o]thers')
 
 vim.keymap.set('n', '<leader>e', '<cmd>mks!<CR><cmd>qa<CR>', { desc = '[E]xit all and save session' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set({ 'n', 'v' }, '<leader>r', function()
+  local ok = pcall(vim.treesitter.start)
+  if ok then
+    vim.print 'Treesitter reloaded!'
+  end
+end, { desc = '[r]eload plugins: Treesitter' })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
