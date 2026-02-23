@@ -22,6 +22,7 @@ vim.o.softtabstop = -1 -- Follow `shiftwidth`
 vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.swapfile = false
+vim.o.termguicolors = true
 vim.o.timeoutlen = 300
 vim.o.undodir = os.getenv 'HOME' .. '/.vim/undodir' -- TODO: recheck what is this
 vim.o.undofile = true
