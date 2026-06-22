@@ -45,6 +45,45 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 --   end,
 -- })
 
+-- [[ User Commands ]]
+local get_relpath = function()
+  local cwd = vim.fn.getcwd(0, 0)
+  local abs_path = vim.api.nvim_buf_get_name(0)
+  return vim.fs.relpath(cwd, abs_path)
+end
+
+vim.api.nvim_create_user_command('CopyLineRange', function(args)
+  local start_pos = args.line1
+  local end_pos = args.line2
+  local range = 'L' .. start_pos
+  if start_pos ~= end_pos then
+    range = 'L' .. start_pos .. '-' .. 'L' .. end_pos
+  end
+
+  local text = range
+  local rel_path = get_relpath()
+  if rel_path ~= nil then
+    text = rel_path .. '#' .. range
+  end
+  vim.fn.setreg('+', text)
+  vim.print(text)
+end, {
+  desc = 'Copy selected line range number to clipboard',
+  range = true,
+})
+
+vim.api.nvim_create_user_command('CopyRelpath', function()
+  local rel_path = get_relpath()
+  if rel_path == nil then
+    vim.inspect('Target path is not under current directory', { depth = vim.log.levels.ERROR })
+  else
+    vim.fn.setreg('+', rel_path)
+    vim.print(rel_path)
+  end
+end, {
+  desc = 'Copy relative filepath to current working directory',
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
