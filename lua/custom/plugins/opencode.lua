@@ -21,7 +21,6 @@ return {
       opencode.ask('@this: ', { submit = true })
     end, '[a]sk', { 'n', 'x' })
     map('<leader>oe', opencode.select, '[e]xecute action...', { 'n', 'x' })
-    map('<leader>o.', opencode.toggle, '[t]oggle OpenCode', { 'n', 't' })
 
     vim.keymap.set({ 'n', 'x' }, '<leader>og', function()
       return opencode.operator '@this '
