@@ -17,6 +17,7 @@ vim.g.have_nerd_font = true
 
 require 'custom.options'
 require 'custom.keymaps'
+require 'custom.filetypes'
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`

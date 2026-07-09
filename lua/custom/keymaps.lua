@@ -1,4 +1,4 @@
--- [[ Basic Keymaps ]]
+-- [[ Basic keymaps ]]
 --  See `:help vim.keymap.set()`
 
 local map_buffer = function(keys, func, desc, mode)
