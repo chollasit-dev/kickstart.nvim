@@ -256,6 +256,7 @@ return {
         html = {},
         hyprls = {},
         jsonls = {},
+        marksman = {},
         nginx_language_server = {},
         nil_ls = {},
         ruff = {},
